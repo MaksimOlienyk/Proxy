@@ -1,16 +1,26 @@
-# Proxy
-```cs
+# Proxy — Патерн Проєктування
+
+Патерн Proxy забезпечує контроль доступу до об’єкта, підміняючи його спеціальним представником (проксі).  
+Клієнт працює з проксі так само, як із реальним об’єктом, але проксі може додавати додаткову логіку (логування, кешування, контроль доступу тощо).
+
+## Ідея
+
+Замість того, щоб звертатися безпосередньо до важкого або захищеного об’єкта, клієнт працює з його «представником», який сам вирішує, коли і як викликати реальний сервіс.
+
+## Структура
+
+| Елемент       | Опис |
+|--------------|------|
+| `IService`   | Спільний інтерфейс для реального сервісу та проксі |
+| `RealService`| Реальний об’єкт з корисною логікою |
+| `Proxy`      | Контролює доступ до `RealService`, додає поведінку |
+| Клієнт       | Працює з проксі так само, як із `RealService` |
+
+## Код
+
+```csharp
 interface IService { void Request(); }
 
-class RealService : IService { public void Request()=>Console.WriteLine("Real Service"); }
+class RealService : IService {
+    public void Request() => Console.WriteLine("Real Ser
 
-class Proxy : IService {
-    private RealService _service;
-    public void Request(){
-        _service ??= new RealService();
-        Console.WriteLine("Proxy control");
-        _service.Request();
-    }
-}
-
-class Program { static void Main()=>new Proxy().Request(); }
